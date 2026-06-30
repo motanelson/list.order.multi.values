@@ -12,9 +12,10 @@ a=input().strip()
 #a="Hello.java"
 b=a.find(".")
 c=a
+xzz=a
 if b>-1:
     c=a[:b]+".class"
-
+    xzz=a[:b]+".jbin"
 os.system("javac --release 25 "+a)
 os.system("javap -c -private "+c+" >/tmp/output.txt")
 f1=open("/tmp/output.txt","r")
@@ -25,8 +26,8 @@ bb=aa.split("\n")
 steps=0
 u="nop\n"
 lasts=""
-functions=[[125,"",bytearray([1,0,1,0])]]
-values=[[125,"",bytearray([1,0,1,65])]]
+functions=[[255,"",bytearray([1,0,1,0])]]
+values=[[255,"",bytearray([1,0,1,32])]]
 for aaa in bb:
     aaa=aaa.strip()
     if aaa!="":
@@ -59,11 +60,17 @@ for aaa in bb:
             pp=len(zz)
             ff=bytearray([1,0,pp])            
             ff=ff+zz
-            values.append([124,zzz,ff])
+            n=254
+            if zzz=="main":
+                n=0
+            values.append([n,zzz,ff])
             ni=len(i)
             i=bytearray([1,0,ni])+i
-            functions.append([124,lasts,i])
-
+            
+            if lasts=="main":
+                functions.append([0,lasts,i])
+            else:
+                functions.append([254,lasts,i])
             u="nop\n"
             
             lasts=zzz
@@ -114,6 +121,8 @@ for aaa in bb:
                     
                     i=i+bytearray([int(ii)])
                     i=i+bytearray([int(n)])
+                    if azz=="main":
+                        n=0
                     values.append([n,azz,ass])
                 except:
                     print(xxx+" error:")
@@ -133,7 +142,10 @@ for aaa in bb:
         if g>-1:
             ni=len(i)
             i=bytearray([1,0,ni])+i
-            functions.append([124,lasts,i])
+            n=254
+            if lasts=="main":
+                n=0
+            functions.append([n,lasts,i])
             
             u="nop\n"
             i=bytearray([0])
@@ -151,7 +163,7 @@ for f in values:
 for f in functions:
     op=op+f[2]
 
-f1=open("output.jbin","bw")
+f1=open(xzz,"bw")
 
 f1.write(op)
 f1.close()
