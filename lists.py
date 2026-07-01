@@ -158,11 +158,25 @@ values.sort()
 
 
 op="JBIN".encode()
+xb=0
 for f in values:
+    a=f[0]-xb
+    if f[0]<254:
+         for t in range(a-1):
+             ppp=values[len(values)-1]
+             op=op+ppp[2]
     op=op+f[2]
+    xb=f[0]
+xb=0
 for f in functions:
-    op=op+f[2]
+    a=f[0]-xb
+    if f[0]<254:
+         for t in range(a-1):
+             ppp=functions[len(funcions)-1]
+             op=op+ppp[2]
 
+    op=op+f[2]
+    xb=f[0]
 f1=open(xzz,"bw")
 
 f1.write(op)
